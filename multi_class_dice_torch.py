@@ -43,8 +43,9 @@ def multi_class_dice(pred, mask, fp_weight=1.0, label_smooth=1.0, eps=1e-6,
         assert isinstance(class_weight, (list, tuple, torch.Tensor))
         if isinstance(class_weight, (list, tuple)):
             class_weight = torch.tensor(class_weight, dtype=torch.float32).to(dice_.device)
+        if torch.max(class_weight) > 1:
             class_weight /= torch.sum(class_weight)
-            return torch.einsum('...c, c -> ', dice_, class_weight)
+        return torch.einsum('...c, c -> ', dice_, class_weight)
 
 
 
